@@ -47,48 +47,9 @@
       border-bottom: 1px solid var(--grid);
     }
 
-    header {
-      border-top: 3px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
-      padding: 16px 0 18px;
-    }
-
-    header h1 {
-      font-size: 32px;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      line-height: 1.05;
-    }
-
-    header h4 {
-      margin-top: 14px;
-      font-size: 17px;
-      font-weight: 400;
-      line-height: 1.45;
-    }
-
-    .aviso {
-      border: 1px solid var(--rule);
-      padding: 10px 12px;
-      margin-top: 28px;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .aviso + .aviso { margin-top: 12px; }
-
-    .aviso strong {
-      display: block;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
     .identidad {
-      padding: 28px 0 8px;
+      padding: 22px 0 8px;
+      border-top: 3px solid var(--rule);
       border-bottom: 1px solid var(--rule);
     }
 
@@ -290,10 +251,70 @@
       color: var(--mute);
     }
 
+    .aviso {
+      border: 1px solid var(--rule);
+      padding: 10px 12px;
+      margin-top: 28px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .aviso + .aviso { margin-top: 12px; }
+
+    .aviso strong {
+      display: block;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .cta {
+      margin-top: 24px;
+    }
+
+    .cta p {
+      font-size: 14px;
+      line-height: 1.35;
+      color: var(--mute);
+      margin-bottom: 10px;
+    }
+
+    .cta a {
+      display: block;
+      padding: 16px 20px;
+      background: var(--ink);
+      color: var(--paper);
+      border: 2px solid var(--rule);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1.15;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
     .error {
       margin-top: 24px;
       border: 1px solid var(--rule);
       padding: 16px;
+    }
+
+    .ticket {
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .ticket a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      overflow-wrap: anywhere;
     }
 
     tr.es-mayoria td:first-child {
@@ -304,8 +325,6 @@
     @media (max-width: 720px) {
       .numero { font-size: 48px; }
       .numero small { font-size: 22px; }
-      header h1 { font-size: 26px; }
-      header h4 { font-size: 16px; }
       .identidad h2 { font-size: 26px; }
       .cifras { grid-template-columns: 1fr; }
       .cifras > .cifra + .cifra {
@@ -364,11 +383,6 @@
   <div class="hoja">
     <p class="volver"><a href="./index.html">← Índice</a></p>
 
-    <header>
-      <h1>#NoHayPartidos</h1>
-      <h4>En México, no hay partidos, solo políticos que se quitan y se ponen camisas del color en turno, esta web no es para decir cosas malas sobre ningún partido ni político; aquí no hay conclusiones ni mensajes, solo hay datos. Eso sí solo abarca un partido, pero es el partido en el poder 👀, y con mayoría absoluta.</h4>
-    </header>
-
     <div id="cuerpo"></div>
 
     <footer id="pie"></footer>
@@ -377,6 +391,11 @@
       <strong>Nota metodológica</strong>
       <span id="nota-texto"></span>
     </aside>
+
+    <p class="ticket">
+      Si eres un político, y tu información en esta web es incorrecta, o si quisieras incluir a un político, levanta un ticket aquí:
+      <a href="https://github.com/e1016/nohaypartidos/issues/new">https://github.com/e1016/nohaypartidos/issues/new</a>
+    </p>
   </div>
 
   <script>
@@ -554,7 +573,11 @@
             "</tr></thead>" +
             '<tbody id="filas-partidos"></tbody>' +
           "</table></div>" +
-        "</section>";
+        "</section>" +
+        '<aside class="cta">' +
+          "<p>Hay una lista completa con el tiempo de militancia de cada uno.</p>" +
+          '<a href="./index.html">Todos los políticos →</a>' +
+        "</aside>";
 
       const barra = document.getElementById("barra-partidos");
       const leyenda = document.getElementById("leyenda");
