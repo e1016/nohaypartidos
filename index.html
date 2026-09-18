@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>#NoHayPartidos</title>
+  <style>
+    :root {
+      --ink: #121212;
+      --paper: #f3efe6;
+      --rule: #121212;
+      --mute: #5a574e;
+      --grid: #d2cdc0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .defs {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    html, body {
+      background: var(--paper);
+      color: var(--ink);
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: "Times New Roman", Times, "Liberation Serif", serif;
+      font-size: 16px;
+      line-height: 1.4;
+      padding: 28px 24px 64px;
+    }
+
+    .hoja {
+      max-width: 1040px;
+      margin: 0 auto;
+      min-width: 0;
+    }
+
+    header {
+      border-top: 3px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      padding: 16px 0 18px;
+    }
+
+    header h1 {
+      font-size: 42px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1.05;
+    }
+
+    header h4 {
+      margin-top: 14px;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.45;
+      max-width: 44em;
+    }
+
+    .dateline {
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .cifra {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 24px;
+      padding: 28px 0 8px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .numero {
+      font-size: 92px;
+      line-height: 0.85;
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+    }
+
+    .numero small {
+      font-size: 42px;
+      letter-spacing: 0;
+    }
+
+    .cifra h2 {
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.25;
+      max-width: 24em;
+      overflow-wrap: break-word;
+    }
+
+    .cifra .nota {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--mute);
+      max-width: 36em;
+    }
+
+    .reparto {
+      grid-column: 1 / -1;
+      padding: 18px 0 8px;
+    }
+
+    .barra-partidos {
+      display: flex;
+      width: 100%;
+      height: 22px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+    }
+
+    .barra-partidos span {
+      display: block;
+      height: 100%;
+      min-width: 0;
+    }
+
+    .leyenda {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 22px;
+      list-style: none;
+      margin-top: 14px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+    }
+
+    .leyenda li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .leyenda i {
+      display: block;
+      width: 12px;
+      height: 12px;
+      border: 1px solid var(--rule);
+      flex: 0 0 12px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .stats div {
+      padding: 16px 12px;
+      border-right: 1px solid var(--rule);
+      text-align: center;
+      min-width: 0;
+    }
+
+    .stats div:last-child { border-right: 0; }
+
+    .stats dt {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--mute);
+      line-height: 1.3;
+    }
+
+    .stats dd {
+      font-size: 24px;
+      font-variant-numeric: tabular-nums;
+      margin-top: 4px;
+      margin-inline-start: 0;
+    }
+
+    .figura {
+      padding-top: 22px;
+      min-width: 0;
+    }
+
+    .figura h3 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+      line-height: 1.35;
+    }
+
+    .plot {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      column-gap: 8px;
+      align-items: start;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .plot-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 6px;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .eje {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--mute);
+      height: 280px;
+    }
+
+    .lienzo {
+      display: flex;
+      align-items: stretch;
+      gap: 3px;
+      min-width: 1280px;
+      width: max(100%, 1280px);
+    }
+
+    .col {
+      flex: 1 0 16px;
+      min-width: 16px;
+      display: flex;
+      flex-direction: column;
+      cursor: crosshair;
+    }
+
+    .track {
+      height: 280px;
+      display: flex;
+      align-items: flex-end;
+      border-bottom: 1px solid var(--rule);
+      background-image:
+        repeating-linear-gradient(
+          to top,
+          var(--grid) 0 1px,
+          transparent 1px 25%
+        );
+    }
+
+    .col:first-child .track {
+      border-left: 1px solid var(--rule);
+    }
+
+    .barra {
+      width: 100%;
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .tramo {
+      width: 100%;
+      min-height: 0;
+    }
+
+    .col.activo .track {
+      outline: 1px solid var(--rule);
+      outline-offset: -1px;
+    }
+
+    .pct-barra {
+      height: 44px;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.05;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      color: var(--ink);
+    }
+
+    .ficha {
+      margin-top: 18px;
+      min-height: 3.2em;
+      border-top: 1px solid var(--rule);
+      padding-top: 8px;
+      font-size: 14px;
+    }
+
+    .ficha .vacio { color: var(--mute); }
+
+    .ficha strong { font-weight: 400; }
+
+    .aviso {
+      border: 1px solid var(--rule);
+      padding: 10px 12px;
+      margin-top: 28px;
+      font-size: 13px;
+      line-height: 1.45;
+      /* max-width: 62em; */
+    }
+
+    .aviso + .aviso { margin-top: 12px; }
+
+    .aviso strong {
+      display: block;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .directorio {
+      margin-top: 28px;
+      border-top: 3px solid var(--rule);
+      padding-top: 12px;
+    }
+
+    .directorio h3 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .directorio .clave {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      margin-bottom: 10px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--mute);
+    }
+
+    .directorio .clave span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .icono {
+      width: 11px;
+      height: 11px;
+      display: block;
+      flex: 0 0 11px;
+      fill: currentColor;
+    }
+
+    .directorio ol {
+      columns: 3;
+      column-gap: 24px;
+      list-style: none;
+      font-size: 13px;
+    }
+
+    .directorio li {
+      break-inside: avoid;
+      padding: 0;
+      border-bottom: 1px solid var(--grid);
+      cursor: pointer;
+    }
+
+    .directorio li a {
+      display: grid;
+      grid-template-columns: 12px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 3px 4px;
+      color: inherit;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .directorio li.activo,
+    .directorio li.activo a {
+      background: var(--ink);
+      color: var(--paper);
+      border-bottom-color: var(--ink);
+    }
+
+    .directorio .marca {
+      width: 11px;
+      height: 11px;
+    }
+
+    .directorio .nombre {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .directorio .pct {
+      font-family: "Courier New", Courier, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    footer {
+      margin-top: 28px;
+      border-top: 1px solid var(--rule);
+      padding-top: 10px;
+      font-size: 12px;
+      color: var(--mute);
+      /* max-width: 62em; */
+    }
+
+    .error {
+      margin-top: 24px;
+      border: 1px solid var(--rule);
+      padding: 16px;
+    }
+
+    @media (max-width: 960px) {
+      .directorio ol { columns: 2; }
+    }
+
+    @media (max-width: 720px) {
+      .cifra { grid-template-columns: 1fr; }
+      .numero { font-size: 64px; }
+      .numero small { font-size: 32px; }
+      header h1 { font-size: 32px; }
+      header h4 { font-size: 16px; }
+      .cifra h2 { font-size: 20px; max-width: none; }
+      .dateline { flex-wrap: wrap; gap: 4px 12px; }
+      .directorio ol { columns: 1; }
+      .leyenda { font-size: 13px; gap: 8px 14px; }
+      .stats { grid-template-columns: 1fr; }
+      .stats div {
+        display: block;
+        text-align: left;
+        padding: 10px 2px;
+        border-right: 0;
+      }
+      .stats div:nth-child(n + 2) { border-top: 1px solid var(--rule); }
+      .stats dt,
+      .stats dd { display: block; margin: 0; }
+      .stats dt { letter-spacing: 0.04em; min-width: 0; }
+      .stats dd { margin-top: 2px; font-size: 22px; }
+      body { padding: 16px 12px 40px; }
+    }
+  </style>
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" class="defs" aria-hidden="true" focusable="false">
+    <symbol id="icono-estrella" viewBox="0 0 16 16">
+      <path d="M8 1.2l1.85 3.74 4.13.6-2.99 2.91.71 4.11L8 10.62l-3.7 1.94.71-4.11-2.99-2.91 4.13-.6z"/>
+    </symbol>
+    <symbol id="icono-mazo" viewBox="0 0 16 16">
+      <path d="M9.15 1.55l4.05 2.34-.95 1.64-4.05-2.34z"/>
+      <path d="M10.55 2.35l1.55 2.68-2.55 4.42-1.55-2.68z"/>
+      <path d="M7.85 6.95l1.35.78-5.05 6.05h-1.7z"/>
+      <path d="M1.6 13.15h6.7v1.7H1.6z"/>
+    </symbol>
+  </svg>
+  <div class="hoja">
+    <header>
+      <h1 style="text-align: center;">#NoHayPartidos</h1>
+      <h4 style="text-align: center; margin: 10px auto;"><i>En México, no hay partidos, solo "políticos" que se quitan y se ponen camisas del color en turno, esta web no es para decir cosas malas sobre ningún partido ni político; aquí no hay conclusiones ni mensajes, solo hay datos.</i></h4>
+    </header>
+
+    <div class="dateline">
+      <span id="fecha">—</span>
+      <span>México</span>
+      <span id="n-conjunto">— políticos</span>
+    </div>
+
+    <section class="cifra">
+      <div class="numero" id="ponderado">—<small>%</small></div>
+      <div>
+        <h2>del tiempo activo de este conjunto pertenece a Morena.</h2>
+        <p class="nota">
+          Un punto por cada año militado. Si un político cambió de partido
+          el mismo año, ese año cuenta una sola vez. Sin año de fin, se
+          cierra en el año de referencia.
+        </p>
+      </div>
+      <div class="reparto">
+        <div class="barra-partidos" id="barra-partidos" role="img" aria-label="Reparto de años de militancia por partido"></div>
+        <ul class="leyenda" id="leyenda"></ul>
+      </div>
+    </section>
+
+    <dl class="stats">
+      <div>
+        <dt>Promedio individual</dt>
+        <dd id="media">—%</dd>
+      </div>
+      <div>
+        <dt>Años-persona Morena</dt>
+        <dd id="anios-morena">—</dd>
+      </div>
+      <div>
+        <dt>Años-persona totales</dt>
+        <dd id="anios-total">—</dd>
+      </div>
+      <div>
+        <dt>Solo Morena</dt>
+        <dd id="solo-morena">—</dd>
+      </div>
+    </dl>
+
+    <section class="figura">
+      <h3>Fig. 1 — Años de militancia, por político. Altura = tiempo total. Color = partido. Orden: más años a menos.</h3>
+      <div class="plot">
+        <div class="eje" id="eje" aria-hidden="true"></div>
+        <div class="plot-scroll">
+          <div class="lienzo" id="lienzo"></div>
+        </div>
+      </div>
+      <p class="ficha" id="ficha">
+        <span class="vacio">Pasar el cursor sobre una barra.</span>
+      </p>
+    </section>
+
+    <section class="directorio">
+      <h3>Directorio</h3>
+      <p class="clave">
+        <span>
+          <svg class="icono" viewBox="0 0 16 16" aria-hidden="true"><use href="#icono-estrella"></use></svg>
+          Presidencia
+        </span>
+        <span>
+          <svg class="icono" viewBox="0 0 16 16" aria-hidden="true"><use href="#icono-mazo"></use></svg>
+          Congreso
+        </span>
+        <span>Clic en el nombre abre la ficha</span>
+      </p>
+      <ol id="directorio"></ol>
+    </section>
+
+    <footer id="pie">
+      Fuente: ./morena.js. Cargos actuales no se modifican; solo se contabiliza
+      la militancia declarada. No es un censo del partido.
+    </footer>
+
+
+    <aside class="aviso" id="nota-metodologica" hidden>
+      <strong>Nota metodológica</strong>
+      <span id="nota-texto"></span>
+    </aside>
+  </div>
+
+  <script>
+    const PARTIDO = "MORENA";
+
+    const COLORES = {
+      MORENA: "#6B1D3A",
+      PRI: "#C8102E",
+      PAN: "#0055A5",
+      PRD: "#E6B800",
+      PVEM: "#2E8B3A",
+      PT: "#7A1018",
+      MC: "#F26522",
+      CONVERGENCIA: "#D35400",
+      PES: "#5C2D91",
+      FXM: "#D81B60",
+      PCD: "#5A7A94",
+      PMT: "#6B4F2A",
+      PMS: "#A67C00",
+      PRT: "#8E1B2A",
+      PSUM: "#9C2A2A",
+      OTRO: "#6E6A60"
+    };
+
+    function colorPartido(partido) {
+      return COLORES[partido] || COLORES.OTRO;
+    }
+
+    function partidoDelAnio(partidos) {
+      if (partidos.has(PARTIDO)) return PARTIDO;
+      const resto = [...partidos].sort();
+      return resto[0] || "OTRO";
+    }
+
+    function anioReferencia(fecha) {
+      const m = String(fecha || "").match(/\d{4}/);
+      return m ? Number(m[0]) : new Date().getFullYear();
+    }
+
+    function aniosMilitados(politico, anioCierre) {
+      const porAnio = new Map();
+      for (const p of politico.partidos || []) {
+        const fin = p.fin == null ? anioCierre : p.fin;
+        if (p.inicio == null || fin < p.inicio) continue;
+        for (let y = p.inicio; y <= fin; y++) {
+          if (!porAnio.has(y)) porAnio.set(y, new Set());
+          porAnio.get(y).add(p.partido);
+        }
+      }
+      const total = porAnio.size;
+      let morena = 0;
+      const porPartido = {};
+      for (const partidos of porAnio.values()) {
+        const dueño = partidoDelAnio(partidos);
+        porPartido[dueño] = (porPartido[dueño] || 0) + 1;
+        if (dueño === PARTIDO) morena += 1;
+      }
+      const aniosOrden = [...porAnio.keys()].sort((a, b) => a - b);
+      const segmentos = [];
+      for (let i = 0; i < aniosOrden.length; i++) {
+        const dueño = partidoDelAnio(porAnio.get(aniosOrden[i]));
+        const ultimo = segmentos[segmentos.length - 1];
+        if (ultimo && ultimo.partido === dueño) ultimo.anios += 1;
+        else segmentos.push({ partido: dueño, anios: 1 });
+      }
+      return {
+        total,
+        morena,
+        porPartido,
+        segmentos,
+        pct: total ? (morena / total) * 100 : 0
+      };
+    }
+
+    function fmtPct(n) {
+      return n.toLocaleString("es-MX", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      });
+    }
+
+    function tipoCargo(cargo) {
+      const t = String(cargo || "").toLowerCase();
+      if (/president[ae] de méxico/.test(t)) return "estrella";
+      if (/senado|cámara de diputados|congreso/.test(t)) return "mazo";
+      return "";
+    }
+
+    function marcaCargo(cargo) {
+      const tipo = tipoCargo(cargo);
+      const wrap = document.createElement("span");
+      wrap.className = "marca";
+      if (!tipo) return wrap;
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("class", "icono");
+      svg.setAttribute("viewBox", "0 0 16 16");
+      svg.setAttribute("aria-hidden", "true");
+      const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+      use.setAttribute("href", tipo === "estrella" ? "#icono-estrella" : "#icono-mazo");
+      svg.appendChild(use);
+      wrap.appendChild(svg);
+      wrap.title = tipo === "estrella" ? "Presidencia" : "Congreso";
+      return wrap;
+    }
+
+    function pintar(data) {
+      const anio = anioReferencia(data.fecha_referencia);
+      const filas = data.politicos.map((p, i) => {
+        const m = aniosMilitados(p, anio);
+        return { i, ...p, ...m };
+      });
+      filas.sort((a, b) => b.total - a.total || a.nombre.localeCompare(b.nombre, "es"));
+
+      const sumaMorena = filas.reduce((s, r) => s + r.morena, 0);
+      const sumaTotal = filas.reduce((s, r) => s + r.total, 0);
+      const ponderado = sumaTotal ? (sumaMorena / sumaTotal) * 100 : 0;
+      const media = filas.length
+        ? filas.reduce((s, r) => s + r.pct, 0) / filas.length
+        : 0;
+      const solo = filas.filter((r) => r.pct >= 99.5).length;
+
+      document.getElementById("fecha").textContent = data.fecha_referencia || "";
+      document.getElementById("n-conjunto").textContent =
+        filas.length + " políticos";
+      document.getElementById("ponderado").innerHTML =
+        ponderado.toLocaleString("es-MX", { maximumFractionDigits: 1 }) +
+        "<small>%</small>";
+      document.getElementById("media").textContent =
+        media.toLocaleString("es-MX", { maximumFractionDigits: 1 }) + "%";
+      document.getElementById("anios-morena").textContent = sumaMorena;
+      document.getElementById("anios-total").textContent = sumaTotal;
+      document.getElementById("solo-morena").textContent =
+        solo + " / " + filas.length;
+
+      const porPartido = {};
+      filas.forEach((r) => {
+        Object.keys(r.porPartido).forEach((p) => {
+          porPartido[p] = (porPartido[p] || 0) + r.porPartido[p];
+        });
+      });
+      const reparto = Object.keys(porPartido)
+        .map((p) => ({
+          partido: p,
+          anios: porPartido[p],
+          pct: sumaTotal ? (porPartido[p] / sumaTotal) * 100 : 0
+        }))
+        .sort((a, b) => {
+          if (a.partido === PARTIDO) return -1;
+          if (b.partido === PARTIDO) return 1;
+          return b.anios - a.anios || a.partido.localeCompare(b.partido);
+        });
+
+      const barraPartidos = document.getElementById("barra-partidos");
+      const leyenda = document.getElementById("leyenda");
+      barraPartidos.innerHTML = "";
+      leyenda.innerHTML = "";
+      reparto.forEach((seg) => {
+        const tramo = document.createElement("span");
+        tramo.style.flex = String(seg.anios);
+        tramo.style.background = colorPartido(seg.partido);
+        tramo.title = seg.partido + " · " +
+          seg.pct.toLocaleString("es-MX", { maximumFractionDigits: 1 }) + "%";
+        barraPartidos.appendChild(tramo);
+
+        const li = document.createElement("li");
+        const sw = document.createElement("i");
+        sw.style.background = colorPartido(seg.partido);
+        li.appendChild(sw);
+        li.appendChild(document.createTextNode(
+          seg.partido + " " +
+          seg.pct.toLocaleString("es-MX", { maximumFractionDigits: 1 }) + "%"
+        ));
+        leyenda.appendChild(li);
+      });
+
+      const lienzo = document.getElementById("lienzo");
+      const ficha = document.getElementById("ficha");
+      const directorio = document.getElementById("directorio");
+      lienzo.innerHTML = "";
+      directorio.innerHTML = "";
+
+      function mostrar(r) {
+        ficha.innerHTML =
+          "<strong>" + r.nombre + "</strong> — " + r.cargo +
+          " · " + r.estado + "<br>" +
+          r.total + " años de militancia. " +
+          r.morena + " en Morena (" +
+          r.pct.toLocaleString("es-MX", { maximumFractionDigits: 1 }) + "%).";
+      }
+
+      function activar(r, col, li) {
+        lienzo.querySelectorAll(".col.activo").forEach((c) => c.classList.remove("activo"));
+        directorio.querySelectorAll("li.activo").forEach((n) => n.classList.remove("activo"));
+        col.classList.add("activo");
+        li.classList.add("activo");
+        mostrar(r);
+      }
+
+      const maxAnios = filas.reduce((m, r) => Math.max(m, r.total), 0) || 1;
+      const eje = document.getElementById("eje");
+      eje.innerHTML = "";
+      [maxAnios, Math.round(maxAnios * 0.75), Math.round(maxAnios * 0.5),
+        Math.round(maxAnios * 0.25), 0].forEach((n) => {
+        const t = document.createElement("span");
+        t.textContent = String(n);
+        eje.appendChild(t);
+      });
+
+      filas.forEach((r) => {
+        const col = document.createElement("div");
+        col.className = "col";
+        col.title = r.nombre + " · " + r.total + " años";
+
+        const track = document.createElement("div");
+        track.className = "track";
+        const barra = document.createElement("div");
+        barra.className = "barra";
+        barra.style.height = (r.total / maxAnios * 100) + "%";
+        (r.segmentos || []).forEach((seg) => {
+          const tramo = document.createElement("div");
+          tramo.className = "tramo";
+          tramo.style.flex = String(seg.anios);
+          tramo.style.background = colorPartido(seg.partido);
+          tramo.title = seg.partido + " · " + seg.anios + " años";
+          barra.appendChild(tramo);
+        });
+        track.appendChild(barra);
+
+        const et = document.createElement("div");
+        et.className = "pct-barra";
+        et.textContent = String(r.total);
+
+        col.appendChild(track);
+        col.appendChild(et);
+
+        const li = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = "./politico.html?i=" + r.i;
+        const nombre = document.createElement("span");
+        nombre.className = "nombre";
+        nombre.textContent = r.nombre;
+        const pct = document.createElement("span");
+        pct.className = "pct";
+        pct.textContent = fmtPct(r.pct) + "%";
+        link.appendChild(marcaCargo(r.cargo));
+        link.appendChild(nombre);
+        link.appendChild(pct);
+        li.appendChild(link);
+        li.title = r.cargo + " — abrir ficha";
+
+        col.addEventListener("mouseenter", () => activar(r, col, li));
+        li.addEventListener("mouseenter", () => activar(r, col, li));
+
+        lienzo.appendChild(col);
+        directorio.appendChild(li);
+      });
+
+      document.getElementById("pie").textContent =
+        "Fuente: ./morena.js. Corte " + anio +
+        ". Cada año de militancia = 1 punto. La cifra grande es el tiempo " +
+        "activo ponderado del conjunto (" + sumaMorena + " / " + sumaTotal +
+        "). En la FIG. 1 la altura es el total de años militados; el color, el partido. " +
+        "La barra llena corresponde a quien más años acumula. " +
+        "Los números bajo las barras son años, no porcentajes.";
+
+      const nota = (data.nota_metodologica || "").trim();
+      if (nota) {
+        document.getElementById("nota-texto").textContent = nota;
+        document.getElementById("nota-metodologica").hidden = false;
+      }
+    }
+
+    </script>
+    <script src="./morena.js"></script>
+    <script>
+      pintar(window.DATOS_MORENA);
+    </script>
+</body>
+</html>
